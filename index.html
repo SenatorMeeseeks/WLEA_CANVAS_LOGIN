@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <script type='text/javascript'>
+    //<![CDATA[
+    // Copyright (c) Microsoft Corporation.  All rights reserved.
+    function InputUtil(errTextElementID, errDisplayElementID) {
+    
+        if (!errTextElementID)  errTextElementID = 'errorText'; 
+        if (!errDisplayElementID)  errDisplayElementID = 'error'; 
+    
+        this.hasFocus = false;
+        this.errLabel = document.getElementById(errTextElementID);
+        this.errDisplay = document.getElementById(errDisplayElementID);
+    };
+    InputUtil.prototype.canDisplayError = function () {
+        return this.errLabel && this.errDisplay;
+    }
+    InputUtil.prototype.checkError = function () {
+        if (!this.canDisplayError){
+            throw new Error ('Error element not present');
+        }
+        if (this.errLabel && this.errLabel.innerHTML) {
+            this.errDisplay.style.display = '';        
+            var cause = this.errLabel.getAttribute('for');
+            if (cause) {
+                var causeNode = document.getElementById(cause);
+                if (causeNode && causeNode.value) {
+                    causeNode.focus();
+                    this.hasFocus = true;
+                }
+            }
+        }
+        else {
+            this.errDisplay.style.display = 'none';
+        }
+    };
+    InputUtil.prototype.setInitialFocus = function (input) {
+        if (this.hasFocus) return;
+        var node = document.getElementById(input);
+        if (node) {
+            if ((/^\s*$/).test(node.value)) {
+                node.focus();
+                this.hasFocus = true;
+            }
+        }
+    };
+    InputUtil.prototype.setError = function (input, errorMsg) {
+        if (!this.canDisplayError) {
+            throw new Error('Error element not present');
+        }
+        input.focus();
+    
+        if (errorMsg) {
+            this.errLabel.innerHTML = errorMsg;
+        }
+        this.errLabel.setAttribute('for', input.id);
+        this.errDisplay.style.display = '';
+    };
+    InputUtil.makePlaceholder = function (input) {
+        var ua = navigator.userAgent;
+    
+        if (ua != null && 
+            (ua.match(/MSIE 9.0/) != null || 
+             ua.match(/MSIE 8.0/) != null ||
+             ua.match(/MSIE 7.0/) != null)) {
+            var node = document.getElementById(input);
+            if (node) {
+                var placeholder = node.getAttribute("placeholder");
+                if (placeholder != null && placeholder != '') {
+                    var label = document.createElement('input');
+                    label.type = "text";
+                    label.value = placeholder;
+                    label.readOnly = true;
+                    label.style.position = 'absolute';
+                    label.style.borderColor = 'transparent';
+                    label.className = node.className + ' hint';
+                    label.tabIndex = -1;
+                    label.onfocus = function () { this.nextSibling.focus(); };
+    
+                    node.style.position = 'relative';
+                    node.parentNode.style.position = 'relative';
+                    node.parentNode.insertBefore(label, node);
+                    node.onkeyup = function () { InputUtil.showHint(this); };
+                    node.onblur = function () { InputUtil.showHint(this); };
+                    node.style.background = 'transparent';
+    
+                    node.setAttribute("placeholder", "");
+                    InputUtil.showHint(node);
+                }
+            }
+        }
+    };
+    InputUtil.focus = function (inputField) {
+        var node = document.getElementById(inputField);
+        if (node) node.focus();
+    };
+    InputUtil.hasClass = function(node, clsName) {
+        return node.className.match(new RegExp('(\\s|^)' + clsName + '(\\s|$)'));
+    };
+    InputUtil.addClass = function(node, clsName) {
+        if (!this.hasClass(node, clsName)) node.className += " " + clsName;
+    };
+    InputUtil.removeClass = function(node, clsName) {
+        if (this.hasClass(node, clsName)) {
+            var reg = new RegExp('(\\s|^)' + clsName + '(\\s|$)');
+            node.className = node.className.replace(reg, ' ');
+        }
+    };
+    InputUtil.showHint = function (node, gotFocus) {
+        if (node.value && node.value != '') {
+            node.previousSibling.style.display = 'none';
+        }
+        else {
+            node.previousSibling.style.display = '';
+        }
+    };
+    InputUtil.updatePlaceholder = function (input, placeholderText) {
+        var node = document.getElementById(input);
+        if (node) {
+            var ua = navigator.userAgent;
+            if (ua != null &&
+                (ua.match(/MSIE 9.0/) != null ||
+                ua.match(/MSIE 8.0/) != null ||
+                ua.match(/MSIE 7.0/) != null)) {
+                var label = node.previousSibling;
+                if (label != null) {
+                    label.value = placeholderText;
+                }
+            }
+            else {
+                node.placeholder = placeholderText;
+            }
+        }
+    };
+    
+    //]]>
+    </script>
+
+</head>
+<body>
+ <img src="Assets/wlea_png_2.png.png" alt="Wyomming Law Enforcement Academy Logo">
+<div class="shape"></div>
+
+
+<div id="content">
+  <div id="header">
+      Wyoming Law Enforcement Academy
+      <div id="subHeader"> Canvas Login</div>
+  </div>
+  <div id="workArea">
+      
+<div id="authArea" class="groupMargin">
+
+
+
+<div id="loginArea">        
+<div id="loginMessage" class="groupMargin">Sign in with your WISER ID or Agency email address.</div>
+
+<form method="post" id="loginForm" autocomplete="off" novalidate="novalidate" onkeypress="if (event && event.keyCode == 13) Login.submitLoginRequest();" action="/adfs/ls/?SAMLRequest=fZLRT8IwEMbf%2FSuWvm8dcyA0sAQhRhLUBdAHX0zX3aDJ1mKvBfnvLUMjxsjr9fvud99dh8ibesvGzm7UAt4doA0%2Bmlohax9GxBnFNEeJTPEGkFnBluOHOUuimG2NtlrompxZLjs4IhgrtSLBbDoib71Bt0hSXoaDnqjCtOiIsD8Qg7AqQBQ3PC5T0SXBCxj0nhHxLbwR0cFMoeXK%2BlKcJGHcD%2BN01emyJGHXvVcSTH0OqbhtXRtrt8goRdQRlC7aH3S01jvKywppjZQE4%2B%2BxJlqha8AsweykgOfF%2FMe%2BLyGSHmucsM5AJHRDa72Wih5zkyD%2F2satVKVU68uLKE4iZPerVR7mT8sVyYbHPqyNZ7Ij9QRN%2FlCPumRIz%2BXD0x0fPWg2zXUtxSG406bh9v85OlGnrcgyrFopcwq3IGQlofRLqWu9nxjgFkbE84HQ7AT9%2FV%2Byq08%3D&SigAlg=http%3A%2F%2Fwww.w3.org%2F2000%2F09%2Fxmldsig%23rsa-sha1&Signature=5t0w6HHXItCPUMhsPktZkYJPH%2FiOoJTWtvDsYHbCWBfEwSNzEvKEaaLt80twP%2FuIeDFLRUlGnIBnjq3ceJUtbhBcqpcwpN%2B0cTTvNx1bArRC9HKL4rjOosEMJ2cUSaxC2inlO%2BrkmxjRyiOnC8KoXqwYb8v0DTNFEHGDd1CEWONRWPgbp5AaNnbVbzbSXTH0Y4LbKbpvxKJLMO6BP9D0%2BRlTsRAcb0vLumwy23XPHg69m21gKWrcoNShrz0fp5y3JYPHsnB6VKhEHXAf9VT5T5RUKuXNnIfK8zXry%2BV%2Fi2igbtQZ1WI4cNhTcxaR%2BkYRCb8Z7J525zuuCZWZo3WMsg%3D%3D&client-request-id=2faf0c84-1cb0-456a-1c00-0080010000cb">
+<div id="error" class="fieldMargin error smallText" style="display: none;">
+  <span id="errorText" for=""></span>
+</div>
+
+<div id="formsAuthenticationArea">
+  <div id="userNameArea">
+      <label id="userNameInputLabel" for="userNameInput" class="hidden">User Account</label>
+      <input id="userNameInput" name="UserName" type="email" value="" tabindex="1" class="text fullWidth" spellcheck="false" placeholder="98765432 or someone@example.com" autocomplete="off">
+  </div>
+
+  <div id="passwordArea">
+      <label id="passwordInputLabel" for="passwordInput" class="hidden">Password</label>
+      <input id="passwordInput" name="Password" type="password" tabindex="2" class="text fullWidth" placeholder="Password" autocomplete="off">
+  <div id="passwordForgot"><a target="_blank" href="https://dm.edu.wyo.gov/wyedselfservice/Reset_User_Creds_5.aspx">Forgot Password?</a></div><p style="color: red; display: none;">Warning! Caps lock is on.</p></div>
+  <div id="kmsiArea" style="display:none">
+      <input type="checkbox" name="Kmsi" id="kmsiInput" value="true" tabindex="3">
+      <label for="kmsiInput">Keep me signed in</label>
+  </div>
+  <div id="submissionArea" class="submitMargin">
+      <span id="submitButton" class="submit" tabindex="4" role="button" onkeypress="if (event && event.keyCode == 32) Login.submitLoginRequest();" onclick="return Login.submitLoginRequest();">Sign in</span>
+  </div>
+</div>
+<input id="optionForms" type="hidden" name="AuthMethod" value="FormsAuthentication">
+</form>
+
+<div id="authOptions">
+<form id="options" method="post" action="https://sso.edu.wyo.gov:443/adfs/ls/?SAMLRequest=fZLRT8IwEMbf%2FSuWvm8dcyA0sAQhRhLUBdAHX0zX3aDJ1mKvBfnvLUMjxsjr9fvud99dh8ibesvGzm7UAt4doA0%2Bmlohax9GxBnFNEeJTPEGkFnBluOHOUuimG2NtlrompxZLjs4IhgrtSLBbDoib71Bt0hSXoaDnqjCtOiIsD8Qg7AqQBQ3PC5T0SXBCxj0nhHxLbwR0cFMoeXK%2BlKcJGHcD%2BN01emyJGHXvVcSTH0OqbhtXRtrt8goRdQRlC7aH3S01jvKywppjZQE4%2B%2BxJlqha8AsweykgOfF%2FMe%2BLyGSHmucsM5AJHRDa72Wih5zkyD%2F2satVKVU68uLKE4iZPerVR7mT8sVyYbHPqyNZ7Ij9QRN%2FlCPumRIz%2BXD0x0fPWg2zXUtxSG406bh9v85OlGnrcgyrFopcwq3IGQlofRLqWu9nxjgFkbE84HQ7AT9%2FV%2Byq08%3D&amp;SigAlg=http%3A%2F%2Fwww.w3.org%2F2000%2F09%2Fxmldsig%23rsa-sha1&amp;Signature=5t0w6HHXItCPUMhsPktZkYJPH%2FiOoJTWtvDsYHbCWBfEwSNzEvKEaaLt80twP%2FuIeDFLRUlGnIBnjq3ceJUtbhBcqpcwpN%2B0cTTvNx1bArRC9HKL4rjOosEMJ2cUSaxC2inlO%2BrkmxjRyiOnC8KoXqwYb8v0DTNFEHGDd1CEWONRWPgbp5AaNnbVbzbSXTH0Y4LbKbpvxKJLMO6BP9D0%2BRlTsRAcb0vLumwy23XPHg69m21gKWrcoNShrz0fp5y3JYPHsnB6VKhEHXAf9VT5T5RUKuXNnIfK8zXry%2BV%2Fi2igbtQZ1WI4cNhTcxaR%2BkYRCb8Z7J525zuuCZWZo3WMsg%3D%3D&amp;client-request-id=2faf0c84-1cb0-456a-1c00-0080010000cb">
+<script type="text/javascript">
+  function SelectOption(option) {
+      var i = document.getElementById('optionSelection');
+      i.value = option;
+      document.forms['options'].submit();
+      return false;
+  }
+</script>
+<input id="optionSelection" type="hidden" name="AuthMethod">
+<div id="authOptionLinks" class="groupMargin"></div>
+</form>
+</div>
+
+<div id="introduction" class="groupMargin">
+Need access? <a id="accessLink" target="_blank" href="https://portals.edu.wyoming.gov/wyedpro/Pages/Credentials_V2/Credentials.aspx?ref=https%3A%2F%2Fwde.instructure.com%2F%3Flogin_success%3D1">Click here</a> for more information.                     
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+function Login() {
+}
+
+Login.userNameInput = 'userNameInput';
+Login.passwordInput = 'passwordInput';
+
+Login.initialize = function () {
+
+  var u = new InputUtil();
+
+  u.checkError();
+  u.setInitialFocus(Login.userNameInput);
+  u.setInitialFocus(Login.passwordInput);
+}();
+
+Login.submitLoginRequest = function () { 
+  var u = new InputUtil();
+  var e = new LoginErrors();
+
+  var userName = document.getElementById(Login.userNameInput);
+  var password = document.getElementById(Login.passwordInput);
+
+  if (!userName.value || !userName.value.match('[@\\\\]')) {
+      u.setError(userName, e.userNameFormatError);
+      return false;
+  }
+
+  if (!password.value) {
+      u.setError(password, e.passwordEmpty);
+      return false;
+  }
+
+  if (password.value.length > maxPasswordLength) {
+      u.setError(password, e.passwordTooLong);
+      return false;
+  }
+
+  document.forms['loginForm'].submit();
+  return false;
+};
+
+InputUtil.makePlaceholder(Login.userNameInput);
+InputUtil.makePlaceholder(Login.passwordInput);
+//]]>
+</script>
+</div>
+
+</div>
+
+  </div>
+  <div id="footerPlaceholder"></div>
+</div>
+<div id="footer">
+  <div id="footerLinks" class="floatReverse">
+       <div><span id="copyright">©2022 Wyoming Law Enforcement Academy</span></div>
+
+</body>
+</html>
+
+
+
+
